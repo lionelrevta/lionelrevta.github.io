@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Sederhana</title>
+    <style>
+         body {
+            font-family: Arial;
+            background: linear-gradient(to right, #f9adea);
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        .box {
+            background: #96c0f8;
+            padding: 30px;
+            width: 350px;
+            margin: auto;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            color: #954c86;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 8px;
+            border-radius: 8px;
+            border: 1px solid #a4e0fe;
+            outline: none;
+        }
+
+        input:focus {
+            border: 1px solid #ff98f6;
+        }
+
+        button {
+            padding: 10px 25px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #954c86;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #ff8ae2;
+        }
+
+        #home {
+            display: none;
+        }
+
+        #pesan {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box" id="login">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Masukkan Username"><br>
+    <input type="password" id="password" placeholder="Masukkan Password"><br>
+    <button onclick="login()">Login</button>
+    <p id="pesan"></p>
+</div>
+
+<div class="box" id="home">
+    <h2>Berhasil Login🎉</h2>
+    <p>Selamat datang!</p>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<script>
+    function login() {
+        let user = document.getElementById("username").value;
+        let pass = document.getElementById("password").value;
+        let pesan = document.getElementById("pesan");
+
+        // reset pesan dulu
+        pesan.innerText = "";
+
+        if (user === "lionel" && pass === "25110") {
+            document.getElementById("login").style.display = "none";
+            document.getElementById("home").style.display = "block";
+        } else {
+            // tampilkan pesan + popup
+            pesan.innerText = "Username atau Password salah!";
+            alert("Login gagal! Username atau Password salah!");
+        }
+    }
+
+    function logout() {
+        document.getElementById("login").style.display = "block";
+        document.getElementById("home").style.display = "none";
+
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+        document.getElementById("pesan").innerText = "";
+    }
+</script>
+
+</body>
+</html>
