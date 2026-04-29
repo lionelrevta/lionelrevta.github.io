@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Pastel Pro</title>
+    <style>
+        :root {
+            --bg-body: #fdfcf0;
+            --bg-calc: #ffffff;
+            --btn-num: #ffffff;
+            --btn-trig: #e5dbff;
+            --btn-spec: #d0ebff;
+            --btn-op: #ffe5b4;
+            --btn-clear: #ffc9c9;
+            --btn-equal: #b2f2bb;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: 0.2s; }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: var(--bg-body);
+            padding: 20px;
+        }
+
+        .calculator {
+            background-color: var(--bg-calc);
+            padding: 25px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 450px;
+            border: 6px solid #f1f3f5;
+        }
+
+        .title {
+            color: #adb5bd;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .display-screen {
+            background-color: #f8f9fa;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: right;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        #history {
+            font-size: 14px;
+            color: #adb5bd;
+            min-height: 20px;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+
+        #display {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 32px;
+            text-align: right;
+            color: #495057;
+            outline: none;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            height: 55px;
+            border: none;
+            border-radius: 15px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #5f6368;
+            box-shadow: 0 3px 0 rgba(0,0,0,0.05);
+        }
+
+        button:active { transform: translateY(2px); box-shadow: none; }
+
+        .btn-num { background-color: var(--btn-num); border: 1px solid #f1f3f5; }
+        .btn-spec { background-color: var(--btn-spec); color: #228be6; }
+        .btn-op { background-color: var(--btn-op); color: #d9480f; }
+        .btn-clear { background-color: var(--btn-clear); color: #fa5252; }
+        .btn-equal { background-color: var(--btn-equal); color: #2b8a3e; font-size: 24px; }
+
+        @media (max-width: 400px) {
+            .buttons { gap: 8px; }
+            button { height: 50px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <div class="title">Kalkulator</div>
+    
+    <div class="display-screen">
+        <div id="history"></div>
+        <input type="text" id="display" readonly placeholder="0">
+    </div>
+    
+    <div class="buttons">
+        <!-- Baris 1: Kontrol Utama -->
+         <button class="btn-spec" onclick="appendValue('%')">%</button>
+        <button class="btn-clear" onclick="clearEverything()">EC</button>
+        <button class="btn-clear" onclick="clearCurrent()">C</button>
+        <button class="btn-spec" onclick="deleteLast()">⌫</button>
+        <button class="btn-op" onclick="appendValue('/')">÷</button>
+
+        <!-- Baris 2: Sains & Operator -->
+        <button class="btn-spec" onclick="appendValue('Math.sqrt(')">√</button>
+        <button class="btn-spec" onclick="appendValue('Math.PI')">π</button>
+        <button class="btn-spec" onclick="appendValue('(')">(</button>
+        <button class="btn-spec" onclick="appendValue(')')">)</button>
+        <button class="btn-op" onclick="appendValue('*')">×</button>
+
+        <!-- Baris 3: Angka & Operator -->
+        <button class="btn-num" onclick="appendValue('7')">7</button>
+        <button class="btn-num" onclick="appendValue('8')">8</button>
+        <button class="btn-num" onclick="appendValue('9')">9</button>
+        <button class="btn-num" onclick="appendValue('.')">.</button>
+        <button class="btn-op" onclick="appendValue('-')">−</button>
+
+        <!-- Baris 4: Angka & Operator -->
+        <button class="btn-num" onclick="appendValue('4')">4</button>
+        <button class="btn-num" onclick="appendValue('5')">5</button>
+        <button class="btn-num" onclick="appendValue('6')">6</button>
+        <button class="btn-num" onclick="appendValue('00')">00</button>
+        <button class="btn-op" onclick="appendValue('+')">+</button>
+
+        <!-- Baris 5: Bawah -->
+        <button class="btn-num" onclick="appendValue('1')">1</button>
+        <button class="btn-num" onclick="appendValue('2')">2</button>
+        <button class="btn-num" onclick="appendValue('3')">3</button>
+        <button class="btn-num" onclick="appendValue('0')">0</button>
+        <button class="btn-equal" onclick="calculate()">=</button>
+    </div>
+</div>
+
+<script>
+    const display = document.getElementById('display');
+    const historyDiv = document.getElementById('history');
+
+    function appendValue(val) {
+        if (display.value === "0" && !isNaN(val)) {
+            display.value = val;
+        } else {
+            display.value += val;
+        }
+    }
+
+    function clearEverything() {
+        display.value = "";
+        historyDiv.innerText = "";
+    }
+
+    function clearCurrent() {
+        display.value = "";
+    }
+
+    function deleteLast() {
+        display.value = display.value.slice(0, -1);
+    }
+
+    function calculate() {
+        try {
+            let expression = display.value;
+            if (expression === "") return;
+            
+            historyDiv.innerText = expression + " =";
+            let processed = expression.replace(/%/g, '/100');
+            let result = eval(processed);
+            
+            display.value = Number.isInteger(result) ? result : parseFloat(result.toFixed(7));
+        } catch (err) {
+            display.value = "Error";
+            setTimeout(clearCurrent, 1500);
+        }
+    }
+</script>
+
+</body>
+</html>
